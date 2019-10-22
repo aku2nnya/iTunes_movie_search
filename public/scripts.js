@@ -8,19 +8,28 @@ function displayMovieList(data) {
   else if (data === '?') movieList.innerHTML = '<br><div class="noMatch">Entered text is not supported!</div>';
   else if (data.resultCount === 0) movieList.innerHTML = '<br><div class="noMatch">No matches found!</div>';
   else if (data.resultCount) {
-    const movieTitles = data.results.map((result) => result.trackName);
-    const movieArtwork = data.results.map((result) => result.artworkUrl100);
-    const movieShortDescription = data.results.map((result) => result.shortDescription);
-    const movieRentalPrice = data.results.map((result) => result.trackRentalPrice);
-    console.log({ movieTitles, movieArtwork, movieShortDescription, movieRentalPrice });
-    const fullList = data.results.map((result) => `
-      <img src=${result.artworkUrl100} alt="Movie Image">
-      <div class="movieInfo">
-        <div class="movieTitle">${result.trackName}</div>
-        <div class="movieShortDescription">${result.shortDescription}...</div>
-        <div class="movieRentalPrice">${result.trackRentalPrice}</div>
-      </div>
-    `);
+    const fullList = data.results.map((result) => {
+      let movieTitle = result.trackName;
+      const movieArtwork = result.artworkUrl100;
+      let movieShortDescription = result.shortDescription;
+      let movieRentalPrice = result.trackRentalPrice;
+      if (!movieTitle) movieTitle = 'Title unavailable';
+      if (!movieShortDescription) movieShortDescription = 'Description unavailable';
+      else movieShortDescription += '...';
+      if (!movieRentalPrice) movieRentalPrice = '<li class="movieRentalPriceNone">Unavailable for rent</li>';
+      else movieRentalPrice = `<li class="movieRentalPrice">Rent for: $${movieRentalPrice}</li>`;
+      return `
+        <li class="movieInfo">
+          <img src=${movieArtwork} alt="Movie Image">
+          <ul class="movieData">
+            <li class="movieTitle">${movieTitle}</li>
+            <li class="movieShortDescription">${movieShortDescription}</li>
+            <br>
+            ${movieRentalPrice}
+          </ul>
+        </li>
+      `;
+    }).join('');
     movieList.innerHTML = fullList;
   } else movieList.innerHTML = `<br><div class="noMatch">Error detected!<div>${data}</div></div>`;
 }
