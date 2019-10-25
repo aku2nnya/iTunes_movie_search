@@ -9,15 +9,17 @@ function displayMovieList(data) {
   else if (data.resultCount === 0) movieList.innerHTML = '<br><div class="noMatch">No matches found!</div>';
   else if (data.resultCount) {
     const fullList = data.results.map((result) => {
+      console.log(result);
       let movieTitle = result.trackName;
       const movieArtwork = result.artworkUrl100;
       let movieShortDescription = result.shortDescription;
       let movieRentalPrice = result.trackRentalPrice;
+      const moviePageUrl = result.trackViewUrl;
       if (!movieTitle) movieTitle = 'Title unavailable';
       if (!movieShortDescription) movieShortDescription = 'Description unavailable';
       else movieShortDescription += '...';
       if (!movieRentalPrice) movieRentalPrice = '<li class="movieRentalPriceNone">Unavailable for rent</li>';
-      else movieRentalPrice = `<li class="movieRentalPrice">Rent for: $${movieRentalPrice}</li>`;
+      else movieRentalPrice = `<li class="movieRentalPrice"><a href="${moviePageUrl}" target="_blank">Rent for: $${movieRentalPrice}</a></li>`;
       return `
         <li class="movieInfo">
           <img src=${movieArtwork} alt="Movie Image">
