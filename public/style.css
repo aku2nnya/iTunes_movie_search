@@ -22,12 +22,19 @@ ul, li {
 
 #movieSearchTerm {
   font-size: 16px;
+  border: 1px solid rgb(87, 87, 87);
+  padding: 4px;
 }
 
 #movieSearchButton {
   font-size: 16px;
   border: 1px solid rgb(87, 87, 87);
   border-radius: 4px;
+  padding: 4px;
+}
+
+#hideCheckbox {
+  font-size: 14px;
   padding: 4px;
 }
 
@@ -45,6 +52,19 @@ ul, li {
 }
 
 .movieInfo img {
+  border-radius: 4px;
+  max-height: 100px;
+}
+
+.movieInfoNoRent {
+  margin: 3px;
+  padding: 5px;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  width: 600px;
+}
+
+.movieInfoNoRent img {
   border-radius: 4px;
   max-height: 100px;
 }

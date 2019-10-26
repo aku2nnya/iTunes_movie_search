@@ -1,6 +1,8 @@
 const movieSearchButton = document.querySelector('#movieSearchButton');
 const movieSearchTerm = document.querySelector('#movieSearchTerm');
 const movieList = document.querySelector('.movieList');
+const hideCheckbox = document.querySelector('#hideCheckbox');
+const hideCheck = document.querySelector('#hideCheck');
 
 
 function displayMovieList(data) {
@@ -9,7 +11,6 @@ function displayMovieList(data) {
   else if (data.resultCount === 0) movieList.innerHTML = '<br><div class="noMatch">No matches found!</div>';
   else if (data.resultCount) {
     const fullList = data.results.map((result) => {
-      console.log(result);
       let movieTitle = result.trackName;
       const movieArtwork = result.artworkUrl100;
       let movieShortDescription = result.shortDescription;
@@ -18,8 +19,21 @@ function displayMovieList(data) {
       if (!movieTitle) movieTitle = 'Title unavailable';
       if (!movieShortDescription) movieShortDescription = 'Description unavailable';
       else movieShortDescription += '...';
-      if (!movieRentalPrice) movieRentalPrice = '<li class="movieRentalPriceNone">Unavailable for rent</li>';
-      else movieRentalPrice = `<li class="movieRentalPrice"><a href="${moviePageUrl}" target="_blank">Rent for: $${movieRentalPrice}</a></li>`;
+      if (!movieRentalPrice && hideCheck.checked) return '';
+      if (!movieRentalPrice) {
+        return `
+          <li class="movieInfoNoRent">
+            <img src=${movieArtwork} alt="Movie Image">
+            <ul class="movieData">
+              <li class="movieTitle">${movieTitle}</li>
+              <li class="movieShortDescription">${movieShortDescription}</li>
+              <br>
+              <li class="movieRentalPriceNone">Unavailable for rent</li>
+            </ul>
+          </li>
+        `;
+      }
+      movieRentalPrice = `<li class="movieRentalPrice"><a href="${moviePageUrl}" target="_blank">Rent for: $${movieRentalPrice}</a></li>`;
       return `
         <li class="movieInfo">
           <img src=${movieArtwork} alt="Movie Image">
@@ -48,4 +62,22 @@ function getMovieData(e) {
   }
 }
 
+function hideUnavailable(e) {
+  e.preventDefault();
+  const movieInfoNoRent = document.querySelectorAll('.movieInfoNoRent');
+  e.target.control.checked = !e.target.control.checked;
+  if (e.target.control.checked) {
+    movieInfoNoRent.forEach((movieInfo) => {
+      const movieNoRent = movieInfo;
+      movieNoRent.style.display = 'none';
+    });
+  } else {
+    movieInfoNoRent.forEach((movieInfo) => {
+      const movieNoRent = movieInfo;
+      movieNoRent.style.display = 'flex';
+    });
+  }
+}
+
 movieSearchButton.addEventListener('click', getMovieData);
+hideCheckbox.addEventListener('click', hideUnavailable);
